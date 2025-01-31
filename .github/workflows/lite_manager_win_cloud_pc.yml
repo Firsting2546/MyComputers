@@ -13,7 +13,7 @@ jobs:
     steps:
       # ดาวน์โหลด Artifact ที่เก็บ IP address
       - name: Download IP Address Artifact
-        uses: actions/download-artifact@v4  # ใช้ v3 อย่างถูกต้อง
+        uses: actions/download-artifact@v4
         with:
           name: ip-address  # ชื่อ artifact ที่เก็บ IP address
 
