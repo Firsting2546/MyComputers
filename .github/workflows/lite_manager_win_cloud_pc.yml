@@ -6,7 +6,8 @@ on:
 jobs:
   build:
     name: Start Building...
-    runs-on: windows-latest
+    runs-on: [self-hosted, windows]  # ใช้ self-hosted runner ที่เป็น Windows
+
     timeout-minutes: 360  # จำกัดที่ 6 ชั่วโมง (สูงสุดที่ GitHub อนุญาต)
 
     steps:
