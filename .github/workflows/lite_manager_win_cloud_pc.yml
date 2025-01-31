@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: ใช้งาน Secret Key
-        run: echo "Using secret key: ${{ secrets.MY_SECRET_KEY }}"
+        run: "Using secret key: ${{ secrets.MY_SECRET_KEY }}"
     
       - name: Downloading & Installing Essentials
         run: |
