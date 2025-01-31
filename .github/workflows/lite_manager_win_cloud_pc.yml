@@ -11,17 +11,36 @@ jobs:
     timeout-minutes: 360  # จำกัดที่ 6 ชั่วโมง (สูงสุดที่ GitHub อนุญาต)
 
     steps:
+      # ดาวน์โหลด Artifact ที่เก็บ IP address
+      - name: Download IP Address Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ip-address  # ชื่อ artifact ที่เก็บ IP address
+
+      # ใช้งาน Secret Key
       - name: ใช้งาน Secret Key
         run: |
           Write-Host "Using secret key: ${{ secrets.MY_SECRET_KEY }}"
 
+      # ดาวน์โหลดและติดตั้ง Essentials
       - name: Downloading & Installing Essentials
         run: |
           Invoke-WebRequest -Uri "https://gitlab.com/joyzone/lite_manager_win/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
           Start-Process -FilePath "cmd.exe" -ArgumentList "/c Downloads.bat" -NoNewWindow -Wait
 
+      # ใช้ IP address ที่เก็บไว้
+      - name: Use IP Address
+        run: |
+          IP_ADDRESS=$(Get-Content ip_address.txt)  # อ่าน IP address จากไฟล์
+          Write-Host "The IP Address is: $IP_ADDRESS"
+          
+          # ตัวอย่างการใช้ IP address (เช่น ใช้ในคำสั่งต่อไปนี้)
+          Start-Process -FilePath "cmd.exe" -ArgumentList "/c connect_to_ip.bat $IP_ADDRESS" -NoNewWindow -Wait
+
+      # เชื่อมต่อกับ LiteManager
       - name: Connect to LiteManager
         run: Start-Process -FilePath "cmd.exe" -ArgumentList "/c show.bat" -NoNewWindow -Wait
 
+      # ใช้ Time Counter
       - name: Time Counter
         run: Start-Process -FilePath "cmd.exe" -ArgumentList "/c loop.bat" -NoNewWindow -Wait
