@@ -24,7 +24,10 @@ jobs:
 
       - name: Setup Windows Environment
         run: powershell.exe -ExecutionPolicy Bypass -File setup.ps1
-  
+
+      - name: Optimize Windows Performance
+        run: powershell.exe -ExecutionPolicy Bypass -File optimize.ps1
+      
       # เชื่อมต่อกับ LiteManager
       - name: Connect to LiteManager
         run: Start-Process -FilePath "cmd.exe" -ArgumentList "/c show.bat" -NoNewWindow -Wait
