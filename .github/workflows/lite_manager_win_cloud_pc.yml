@@ -7,13 +7,7 @@ jobs:
   build:
     name: Start Building...
     runs-on: windows-latest  # ใช้ windows-latest หรือ windows-2022 แทนการใช้ self-hosted ถ้าไม่ได้ใช้ runner ของตัวเอง
-
     timeout-minutes: 360  # จำกัดที่ 6 ชั่วโมง (สูงสุดที่ GitHub อนุญาต)
-
-    steps:
-      - name: ใช้งาน Secret Key
-  run: echo "Secret Key is not being used"
-      
       - name: Downloading & Installing Essentials
         run: |
           Invoke-WebRequest -Uri "https://gitlab.com/joyzone/lite_manager_win/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
