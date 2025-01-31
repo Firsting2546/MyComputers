@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     name: Start Building...
-    runs-on: [self-hosted, windows]  # ใช้ self-hosted runner ที่เป็น Windows
+    runs-on: windows-latest  # ใช้ windows-latest หรือ windows-2022 แทนการใช้ self-hosted ถ้าไม่ได้ใช้ runner ของตัวเอง
 
     timeout-minutes: 360  # จำกัดที่ 6 ชั่วโมง (สูงสุดที่ GitHub อนุญาต)
 
