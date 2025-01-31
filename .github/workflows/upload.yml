@@ -1,0 +1,21 @@
+name: Upload IP Address
+
+on:
+  workflow_dispatch:
+
+jobs:
+  upload:
+    name: Upload IP Address Artifact
+    runs-on: windows-latest
+
+    steps:
+      - name: Create IP Address File
+        run: |
+          echo "192.168.1.1" > ip_address.txt  # ตัวอย่าง IP address ที่จะใช้
+
+      - name: Upload IP Address Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ip-address  # ชื่อ artifact
+          path: ip_address.txt  # ไฟล์ที่เก็บ IP address
+          
