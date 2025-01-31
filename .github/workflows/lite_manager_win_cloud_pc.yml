@@ -6,9 +6,9 @@ on:
 jobs:
   build:
     name: Start Building...
-    runs-on: windows-latest  # ใช้ windows-latest หรือ windows-2022
+    runs-on: windows-latest
 
-    timeout-minutes: 360  # จำกัดที่ 6 ชั่วโมง (สูงสุดที่ GitHub อนุญาต)
+    timeout-minutes: 360  # จำกัดที่ 6 ชั่วโมง
 
     steps:
       # ดาวน์โหลด Artifact ที่เก็บ IP address
