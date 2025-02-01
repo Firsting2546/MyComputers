@@ -23,19 +23,6 @@ jobs:
           [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
           iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
-      # ตรวจสอบและติดตั้งไดรเวอร์เสียง
-      - name: Check and Install Audio Drivers
-        run: |
-          # ใช้คำสั่งนี้เพื่อรีสตาร์ทบริการเสียงถ้ามันมีปัญหา
-          Restart-Service -Name 'Audiosrv'
-          
-          # ตรวจสอบสถานะของบริการเสียง
-          Get-Service -Name 'Audiosrv'
-
-          # อาจต้องติดตั้งไดรเวอร์เสียงจากแหล่งที่มา หรือใช้คำสั่งเพิ่มเติมเพื่อดาวน์โหลดไดรเวอร์เสียง
-          # เช่น การติดตั้งไดรเวอร์จาก Windows Update (อาจต้องปรับแต่งตามความต้องการ)
-          Start-Process -FilePath "cmd.exe" -ArgumentList "/c pnputil /add-driver C:\Path\To\Your\AudioDriver.inf /install" -NoNewWindow -Wait
-
       # ติดตั้ง Discord, Blockbench และ VS Code
       - name: Install Discord, Blockbench, and VS Code
         run: |
