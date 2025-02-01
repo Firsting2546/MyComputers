@@ -48,9 +48,6 @@ jobs:
       - name: Time Counter
         run: Start-Process -FilePath "cmd.exe" -ArgumentList "/c loop.bat" -NoNewWindow -Wait
 
-      - name: Keep Windows Running
-        run: start /b cmd /c keep_alive.bat
-
       - name: Random Delay
         run: sleep $((RANDOM % 600))  # หน่วงเวลาแบบสุ่ม (0-600 วินาที)
         
