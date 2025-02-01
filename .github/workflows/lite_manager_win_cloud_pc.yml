@@ -17,10 +17,10 @@ jobs:
           Write-Host "Using secret key: ${{ secrets.MY_SECRET_KEY }}"
 
       - name: Setup Windows Environment
-        run: powershell.exe -ExecutionPolicy Bypass -File scripts/setup.ps1
+        run: cmd.exe -ExecutionPolicy Bypass -File scripts/setup.ps1
 
       - name: Optimize Windows Performance
-        run: powershell.exe -ExecutionPolicy Bypass -File scripts/optimize.ps1
+        run: cmd.exe -ExecutionPolicy Bypass -File scripts/optimize.ps1
 
       # ดาวน์โหลดและติดตั้ง Essentials
       - name: Downloading & Installing Essentials
