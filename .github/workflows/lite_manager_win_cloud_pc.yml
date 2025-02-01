@@ -11,27 +11,36 @@ jobs:
     timeout-minutes: 360  # จำกัดที่ 6 ชั่วโมง
 
     steps:
-     # ใช้งาน Secret Key
-      - name: ใช้งาน Secret Key
-        run: |
-          Write-Host "Using secret key: ${{ secrets.MY_SECRET_KEY }}"
-          
-      - name: Setup Windows Environment
-        run: cmd /c powershell -ExecutionPolicy Bypass -File scripts/setup.ps1
+      # ดึงโค้ดจาก Repo
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
+      # ตรวจสอบไฟล์ที่อยู่ใน Repo
+      - name: Check Files
+        run: cmd /c dir /s scripts
+
+      # ใช้งาน Secret Key
+      - name: ใช้งาน Secret Key
+        run: cmd /c echo Using secret key: ${{ secrets.MY_SECRET_KEY }}
+          
+      # ตั้งค่า Windows Environment
+      - name: Setup Windows Environment
+        run: cmd /c scripts\setup.ps1
+
+      # ปรับแต่ง Windows ให้ดีขึ้น
       - name: Optimize Windows Performance
-        run: cmd /c powershell -ExecutionPolicy Bypass -File scripts/optimize.ps1
+        run: cmd /c scripts\optimize.ps1
 
       # ดาวน์โหลดและติดตั้ง Essentials
       - name: Downloading & Installing Essentials
         run: |
-          Invoke-WebRequest -Uri "https://gitlab.com/joyzone/lite_manager_win/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
-          Start-Process -FilePath "cmd.exe" -ArgumentList "/c Downloads.bat" -NoNewWindow -Wait
+          curl -o Downloads.bat https://gitlab.com/joyzone/lite_manager_win/-/raw/main/Downloads.bat
+          cmd /c Downloads.bat
 
-      # เชื่อมต่อกับ LiteManager
+      # เชื่อมต่อ LiteManager
       - name: Connect to LiteManager
-        run: Start-Process -FilePath "cmd.exe" -ArgumentList "/c show.bat" -NoNewWindow -Wait
+        run: cmd /c show.bat
 
       # ใช้ Time Counter
       - name: Time Counter
-        run: Start-Process -FilePath "cmd.exe" -ArgumentList "/c loop.bat" -NoNewWindow -Wait
+        run: cmd /c loop.bat
