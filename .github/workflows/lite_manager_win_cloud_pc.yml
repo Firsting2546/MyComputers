@@ -23,12 +23,10 @@ jobs:
           [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
           iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
-      # ติดตั้ง Discord, Blockbench และ VS Code
-      - name: Install Discord, Blockbench, and VS Code
+      # ติดตั้ง VS Code
+      - name: Install VS Code
         run: |
           choco install vscode -y
-          choco install blockbench -y
-          choco install discord -y
     
       - name: Disable Windows Search Service
         run: |
