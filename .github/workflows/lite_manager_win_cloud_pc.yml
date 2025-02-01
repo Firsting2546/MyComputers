@@ -25,11 +25,11 @@ jobs:
           
       # ตั้งค่า Windows Environment
       - name: Setup Windows Environment
-        run: cmd /c scripts\setup.ps1
-
+        run: cmd /c powershell -ExecutionPolicy Bypass -File scripts\setup.ps1
+        
       # ปรับแต่ง Windows ให้ดีขึ้น
       - name: Optimize Windows Performance
-        run: cmd /c scripts\optimize.ps1
+        run: cmd /c powershell -ExecutionPolicy Bypass -File scripts\optimize.ps1
 
       # ดาวน์โหลดและติดตั้ง Essentials
       - name: Downloading & Installing Essentials
