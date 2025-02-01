@@ -29,6 +29,20 @@ jobs:
           choco install vscode -y
           choco install blockbench -y
           choco install discord -y
+    
+      - name: Disable Windows Search Service
+        run: |
+          Set-Service -Name "WSearch" -StartupType Disabled
+          Stop-Service -Name "WSearch"
+
+      - name: Disable Superfetch Service
+        run: |
+          Set-Service -Name "SysMain" -StartupType Disabled
+          Stop-Service -Name "SysMain"
+
+      - name: Disable Windows Defender Real-Time Protection (ถ้ามี Antivirus อื่นแล้ว)
+        run: |
+          Set-MpPreference -DisableRealtimeMonitoring $true
 
       # ดาวน์โหลดและติดตั้ง Essentials
       - name: Downloading & Installing Essentials
