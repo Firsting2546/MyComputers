@@ -11,36 +11,35 @@ jobs:
     timeout-minutes: 360  # จำกัดที่ 6 ชั่วโมง
 
     steps:
-      # ดึงโค้ดจาก Repo
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      # ตรวจสอบไฟล์ที่อยู่ใน Repo
-      - name: Check Files
-        run: cmd /c dir /s scripts
-
       # ใช้งาน Secret Key
       - name: ใช้งาน Secret Key
-        run: cmd /c echo Using secret key: ${{ secrets.MY_SECRET_KEY }}
+        run: |
+          Write-Host "Using secret key: ${{ secrets.MY_SECRET_KEY }}"
 
-      # ตั้งค่า Windows Environment
-      - name: Setup Windows Environment
-        run: cmd /c powershell -ExecutionPolicy Bypass -File scripts\setup.ps1
+      # ติดตั้ง Chocolatey (ถ้ายังไม่มี)
+      - name: Install Chocolatey
+        run: |
+          Set-ExecutionPolicy Bypass -Scope Process -Force
+          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+          iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
-      # ปรับแต่ง Windows ให้ดีขึ้น
-      - name: Optimize Windows Performance
-        run: cmd /c powershell -ExecutionPolicy Bypass -File scripts\optimize.ps1
+      # ติดตั้ง Discord, Blockbench และ VS Code
+      - name: Install Discord, Blockbench, and VS Code
+        run: |
+          choco install vscode -y
+          choco install blockbench -y
+          choco install discord -y
 
       # ดาวน์โหลดและติดตั้ง Essentials
       - name: Downloading & Installing Essentials
         run: |
-          curl -o Downloads.bat https://gitlab.com/joyzone/lite_manager_win/-/raw/main/Downloads.bat
-          cmd /c Downloads.bat
+          Invoke-WebRequest -Uri "https://gitlab.com/joyzone/lite_manager_win/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
+          Start-Process -FilePath "cmd.exe" -ArgumentList "/c Downloads.bat" -NoNewWindow -Wait
 
-      # เชื่อมต่อ LiteManager
+      # เชื่อมต่อกับ LiteManager
       - name: Connect to LiteManager
-        run: cmd show.bat
+        run: Start-Process -FilePath "cmd.exe" -ArgumentList "/c show.bat" -NoNewWindow -Wait
 
       # ใช้ Time Counter
       - name: Time Counter
-        run: cmd loop.bat
+        run: Start-Process -FilePath "cmd.exe" -ArgumentList "/c loop.bat" -NoNewWindow -Wait
