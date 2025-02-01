@@ -22,11 +22,11 @@ jobs:
       # ใช้งาน Secret Key
       - name: ใช้งาน Secret Key
         run: cmd /c echo Using secret key: ${{ secrets.MY_SECRET_KEY }}
-          
+
       # ตั้งค่า Windows Environment
       - name: Setup Windows Environment
         run: cmd /c powershell -ExecutionPolicy Bypass -File scripts\setup.ps1
-        
+
       # ปรับแต่ง Windows ให้ดีขึ้น
       - name: Optimize Windows Performance
         run: cmd /c powershell -ExecutionPolicy Bypass -File scripts\optimize.ps1
@@ -39,8 +39,8 @@ jobs:
 
       # เชื่อมต่อ LiteManager
       - name: Connect to LiteManager
-        run: cmd /c show.bat
+        run: cmd show.bat
 
       # ใช้ Time Counter
       - name: Time Counter
-        run: cmd /c loop.bat
+        run: cmd loop.bat
