@@ -27,7 +27,25 @@ jobs:
       - name: Install VS Code
         run: |
           choco install vscode -y
-    
+
+      - name: Set High Performance Power Plan
+        run: |
+          powercfg /setactive SCHEME_MIN
+
+      - name: Disable Hibernation
+        run: |
+          powercfg /h off
+
+      - name: Disable Background Apps
+        run: |
+          reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" /v "GlobalUserDisabled" /t REG_DWORD /d 1 /f
+          reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "Start_TrackProgs" /t REG_DWORD /d 0 /f
+
+      - name: Clear Temp Files
+        run: |
+          Remove-Item -Path "C:\Windows\Temp\*" -Force -Recurse -ErrorAction SilentlyContinue
+          Remove-Item -Path "$env:TEMP\*" -Force -Recurse -ErrorAction SilentlyContinue
+         
       - name: Disable Windows Search Service
         run: |
           Set-Service -Name "WSearch" -StartupType Disabled
