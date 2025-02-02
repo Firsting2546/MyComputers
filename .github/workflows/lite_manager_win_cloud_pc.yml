@@ -77,7 +77,22 @@ jobs:
         run: |
           reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 0 /f
           reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 0 /f
-          
+
+      - name: Enable Windows Audio & RDP
+        run: |
+          sc config "Audiosrv" start= auto
+          net start "Audiosrv"
+          sc config "AudioEndpointBuilder" start= auto
+          net start "AudioEndpointBuilder"
+          reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
+          netsh advfirewall firewall set rule group="Remote Desktop" new enable=Yes
+
+      - name: Install VB-Audio Virtual Cable
+        run: |
+          Invoke-WebRequest -Uri "https://download.vb-audio.com/Download_CABLE/VBCABLE_Driver_Pack43.zip" -OutFile "VBCABLE.zip"
+          tar -xf VBCABLE.zip -C C:\VBCABLE
+          Start-Process -FilePath "C:\VBCABLE\VBCABLE_Setup_x64.exe" -ArgumentList "/silent" -NoNewWindow -Wait
+        
       # ดาวน์โหลดและติดตั้ง Essentials
       - name: Downloading & Installing Essentials
         run: |
