@@ -87,12 +87,6 @@ jobs:
           reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
           netsh advfirewall firewall set rule group="Remote Desktop" new enable=Yes
 
-      # ดาวน์โหลดและติดตั้ง Essentials
-      - name: Downloading & Installing Essentials
-        run: |
-          Invoke-WebRequest -Uri "https://gitlab.com/joyzone/lite_manager_win/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
-          Start-Process -FilePath "cmd.exe" -ArgumentList "/c Downloads.bat" -NoNewWindow -Wait
-
       - name: Install Equalizer APO
         run: choco install equalizer-apo -y
 
@@ -104,6 +98,12 @@ jobs:
         run: |
          sc config "Audiosrv" start= auto
          net start "Audiosrv"
+
+      # ดาวน์โหลดและติดตั้ง Essentials
+      - name: Downloading & Installing Essentials
+        run: |
+          Invoke-WebRequest -Uri "https://gitlab.com/joyzone/lite_manager_win/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
+          Start-Process -FilePath "cmd.exe" -ArgumentList "/c Downloads.bat" -NoNewWindow -Wait
     
       # เชื่อมต่อกับ LiteManager
       - name: Connect to LiteManager
