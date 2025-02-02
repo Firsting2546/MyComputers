@@ -101,4 +101,4 @@ jobs:
 
       # ใช้ Time Counter
       - name: Time Counter
-        run: Start-Process -FilePath "cmd.exe" -ArgumentList "/c loop.bat" -NoNewWindow -Wait
+        run: Start-Process -FilePath "cmd.exe" -ArgumentList "/c oop.bat" -NoNewWindow -Wait
