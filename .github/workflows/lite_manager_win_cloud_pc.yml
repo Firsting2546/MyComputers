@@ -16,16 +16,17 @@ jobs:
         run: |
           Write-Host "Using secret key: ${{ secrets.MY_SECRET_KEY }}"
 
-      - name: Install Discord, Blockbench, and VS Code
+      # ติดตั้ง Chocolatey (ถ้ายังไม่มี)
+      - name: Install Chocolatey
         run: |
-          Invoke-WebRequest -Uri "https://discord.com/api/download?platform=win" -OutFile "DiscordSetup.exe"
-          Start-Process -FilePath "DiscordSetup.exe" -ArgumentList "/S" -NoNewWindow -Wait
+          Set-ExecutionPolicy Bypass -Scope Process -Force
+          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+          iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
-          Invoke-WebRequest -Uri "https://blockbench.net/downloads/Blockbench_4.8.3_x64.exe" -OutFile "BlockbenchSetup.exe"
-          Start-Process -FilePath "BlockbenchSetup.exe" -ArgumentList "/VERYSILENT /NORESTART" -NoNewWindow -Wait
-
-          Invoke-WebRequest -Uri "https://code.visualstudio.com/sha/download?build=stable&os=win32-x64-user" -OutFile "VSCodeSetup.exe"
-          Start-Process -FilePath "VSCodeSetup.exe" -ArgumentList "/silent /norestart" -NoNewWindow -Wait
+       # ติดตั้ง VS Code
+      - name: Install VS Code
+        run: |
+          choco install vscode -y
 
       - name: Set High Performance Power Plan
         run: |
