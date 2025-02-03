@@ -36,12 +36,14 @@ jobs:
       - name: Start Ngrok Tunnel
         run: |
           Start-Process -NoNewWindow -FilePath "C:\ngrok\ngrok.exe" -ArgumentList "tcp 3389"
+          Start-Sleep -Seconds 10  # รอให้ ngrok ทำงานก่อน
 
-      - name: Wait for Ngrok to Establish Connection
+      # ✅ **ตรวจสอบว่า Ngrok กำลังทำงานอยู่หรือไม่**
+      - name: Check if Ngrok is Running
         run: |
-          Start-Sleep -Seconds 10
+          tasklist | findstr ngrok || echo "Ngrok is not running!"
 
-      # ✅ **แสดง IP & พอร์ตของ Ngrok**
+      # ✅ **ดึง Public IP ของ Ngrok**
       - name: Get Ngrok Public IP
         run: |
           $ngrokInfo = Invoke-RestMethod -Uri http://127.0.0.1:4040/api/tunnels
@@ -54,3 +56,4 @@ jobs:
       - name: Time Count
         run: |
           cmd /c loop.bat
+          
