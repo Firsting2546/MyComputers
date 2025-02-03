@@ -27,33 +27,30 @@ jobs:
           C:\ngrok\ngrok.exe authtoken $Env:NGROK_AUTH_TOKEN
         env:
           NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
-          
+
       - name: Enabling RDP Access
-        run: |
-          cmd /c Access.bat       
+        run: cmd /c Access.bat       
 
       # ✅ **เริ่ม Ngrok Tunnel**
       - name: Start Ngrok Tunnel
         run: |
-          Start-Process -NoNewWindow -FilePath "C:\ngrok\ngrok.exe" -ArgumentList "tcp 3389"
+          Start-Process -FilePath "C:\ngrok\ngrok.exe" -ArgumentList "tcp 3389" -RedirectStandardOutput ngrok.log -NoNewWindow
           Start-Sleep -Seconds 10  # รอให้ ngrok ทำงานก่อน
 
       # ✅ **ตรวจสอบว่า Ngrok กำลังทำงานอยู่หรือไม่**
       - name: Check if Ngrok is Running
         run: |
-          tasklist | findstr ngrok || echo "Ngrok is not running!"
+          tasklist | findstr ngrok || (Write-Host "❌ Ngrok is not running!"; Get-Content ngrok.log)
+          exit 0  # ป้องกัน workflow หยุดทำงาน ถ้า ngrok ไม่รัน ให้ดู log แทน
 
       # ✅ **ดึง Public IP ของ Ngrok**
       - name: Get Ngrok Public IP
         run: |
           $ngrokInfo = Invoke-RestMethod -Uri http://127.0.0.1:4040/api/tunnels
-          Write-Host "Ngrok Public IP: " $ngrokInfo.tunnels[0].public_url
+          Write-Host "✅ Ngrok Public IP: " $ngrokInfo.tunnels[0].public_url
 
       - name: Log In To Remote Desktop Protocol
-        run: |
-          cmd /c startaudio.bat
+        run: cmd /c startaudio.bat
 
       - name: Time Count
-        run: |
-          cmd /c loop.bat
-          
+        run: cmd /c loop.bat
