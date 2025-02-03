@@ -40,8 +40,16 @@ jobs:
       # ✅ **ตรวจสอบว่า Ngrok กำลังทำงานอยู่หรือไม่**
       - name: Check if Ngrok is Running
         run: |
-          tasklist | findstr ngrok || (Write-Host "❌ Ngrok is not running!"; Get-Content ngrok.log)
-          exit 0  # ป้องกัน workflow หยุดทำงาน ถ้า ngrok ไม่รัน ให้ดู log แทน
+          $ngrokRunning = Get-Process | Where-Object { $_.ProcessName -eq "ngrok" }
+          if (-not $ngrokRunning) {
+            Write-Host "❌ Ngrok is not running!"
+            if (Test-Path "ngrok.log") {
+              Get-Content ngrok.log
+            }
+            exit 1  # ออกจาก workflow ด้วย error code 1
+          } else {
+            Write-Host "✅ Ngrok is running!"
+          }
 
       # ✅ **ดึง Public IP ของ Ngrok**
       - name: Get Ngrok Public IP
