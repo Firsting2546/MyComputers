@@ -1,0 +1,34 @@
+name: Setup Remote Desktop on Windows Server 2022
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  setup-rdp:
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Enable Remote Desktop
+        run: |
+          # เปิดใช้งาน RDP ผ่าน PowerShell
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name 'fDenyTSConnections' -Value 0
+          
+          # เปิดพอร์ตที่ใช้สำหรับ RDP ใน Windows Firewall
+          Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+
+      - name: Get IP Address
+        run: |
+          # ตรวจสอบ IP Address ของเครื่อง
+          $ip = (Test-Connection -ComputerName google.com -Count 1).Address
+          Write-Host "IP Address: $ip"
+
+      - name: Restart RDP Service
+        run: |
+          # รีสตาร์ทบริการ RDP เพื่อให้การตั้งค่ามีผล
+          Restart-Service -Name TermService -Force
+          Write-Host "RDP Service has been restarted."
