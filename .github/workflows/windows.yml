@@ -21,11 +21,11 @@ jobs:
           # เปิดพอร์ตที่ใช้สำหรับ RDP ใน Windows Firewall
           Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
 
-      - name: Get IP Address
+      - name: Get local IP Address
         run: |
-          # ตรวจสอบ IP Address ของเครื่อง
-          $ip = (Test-Connection -ComputerName google.com -Count 1).Address
-          Write-Host "IP Address: $ip"
+          # ใช้ PowerShell เพื่อดึง IP Address จากเครื่อง
+          $ip = (Get-NetIPAddress -AddressFamily IPv4 | Where-Object {$_.IPAddress -ne '127.0.0.1'}).IPAddress
+          Write-Host "Local IP Address: $ip"
 
       - name: Restart RDP Service
         run: |
