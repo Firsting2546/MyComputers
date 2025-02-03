@@ -78,17 +78,6 @@ jobs:
           reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 0 /f
           reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 0 /f
 
-      - name: Enable Windows Audio Service
-        run: |
-          Set-Service -Name "Audiosrv" -StartupType Automatic
-          Start-Service -Name "Audiosrv"
-
-      - name: Modify RDP Host Configurations
-        run: |
-          $gpeditPath = "HKLM:\Software\Policies\Microsoft\Windows NT\Terminal Services"
-          New-ItemProperty -Path $gpeditPath -Name fEnableAudio -Value 1 -PropertyType DWord -Force
-          New-ItemProperty -Path $gpeditPath -Name fEnableVideo -Value 1 -PropertyType DWord -Force
-      
       # ดาวน์โหลดและติดตั้ง Essentials
       - name: Downloading & Installing Essentials
         run: |
