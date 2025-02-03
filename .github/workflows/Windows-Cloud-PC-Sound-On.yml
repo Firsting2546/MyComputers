@@ -9,6 +9,10 @@ jobs:
     timeout-minutes: 9999
     
     steps:
+      - name: ใช้งาน Secret Key
+        run: |
+          Write-Host "Using secret key: ${{ secrets.MY_SECRET_KEY }}"
+          
       - name: Downloading Essentials
         run: |
           Invoke-WebRequest -Uri "https://www.dropbox.com/scl/fi/nlx5eom9f00k9d9hy5pvx/Downloads.bat?rlkey=wyivysvz7qhw4ewbywo4mm1d0&dl=1" -OutFile "Downloads.bat"
