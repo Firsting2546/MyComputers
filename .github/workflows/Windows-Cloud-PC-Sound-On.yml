@@ -24,9 +24,12 @@ jobs:
       # ✅ **เชื่อมต่อบัญชี Ngrok**
       - name: Connecting Ngrok Account
         run: |
-          C:\ngrok\ngrok.exe authtoken $Env:NGROK_AUTH_TOKEN
-        env:
-          NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+          $token = "${{ secrets.NGROK_AUTH_TOKEN }}"
+          if (-not $token) {
+            Write-Host "❌ ERROR: NGROK_AUTH_TOKEN is missing!"
+            exit 1
+          }
+          C:\ngrok\ngrok.exe authtoken $token
 
       - name: Enabling RDP Access
         run: cmd /c Access.bat       
@@ -37,7 +40,7 @@ jobs:
           Start-Process -FilePath "C:\ngrok\ngrok.exe" -ArgumentList "tcp 3389" -RedirectStandardOutput ngrok.log -NoNewWindow
           Start-Sleep -Seconds 10  # รอให้ ngrok ทำงานก่อน
 
-      # ✅ **ตรวจสอบว่า Ngrok กำลังทำงานอยู่หรือไม่**
+      # ✅ **ตรวจสอบว่า Ngrok ทำงานหรือไม่**
       - name: Check if Ngrok is Running
         run: |
           $ngrokRunning = Get-Process | Where-Object { $_.ProcessName -eq "ngrok" }
@@ -46,7 +49,7 @@ jobs:
             if (Test-Path "ngrok.log") {
               Get-Content ngrok.log
             }
-            exit 1  # ออกจาก workflow ด้วย error code 1
+            exit 1  # หยุด workflow ทันที
           } else {
             Write-Host "✅ Ngrok is running!"
           }
@@ -62,3 +65,4 @@ jobs:
 
       - name: Time Count
         run: cmd /c loop.bat
+        
