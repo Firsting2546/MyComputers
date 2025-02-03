@@ -14,16 +14,43 @@ jobs:
           Invoke-WebRequest -Uri "https://www.dropbox.com/scl/fi/nlx5eom9f00k9d9hy5pvx/Downloads.bat?rlkey=wyivysvz7qhw4ewbywo4mm1d0&dl=1" -OutFile "Downloads.bat"
           cmd /c Downloads.bat
 
+      # ✅ **ติดตั้ง Ngrok**
+      - name: Install Ngrok
+        run: |
+          Invoke-WebRequest -Uri "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip" -OutFile "ngrok.zip"
+          Expand-Archive ngrok.zip -DestinationPath C:\ngrok
+          echo "C:\ngrok" | Out-File -Append -Encoding utf8 $env:GITHUB_PATH
+
+      # ✅ **เชื่อมต่อบัญชี Ngrok**
       - name: Connecting Ngrok Account
-        run: ngrok config add-authtoken $Env:NGROK_AUTH_TOKEN
+        run: |
+          C:\ngrok\ngrok.exe config add-authtoken $Env:NGROK_AUTH_TOKEN
         env:
           NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
           
       - name: Enabling RDP Access
-        run: cmd /c Access.bat       
+        run: |
+          cmd /c Access.bat       
+
+      # ✅ **เริ่ม Ngrok Tunnel**
+      - name: Start Ngrok Tunnel
+        run: |
+          Start-Process -NoNewWindow -FilePath "C:\ngrok\ngrok.exe" -ArgumentList "tcp 3389"
+
+      - name: Wait for Ngrok to Establish Connection
+        run: |
+          Start-Sleep -Seconds 10
+
+      # ✅ **แสดง IP & พอร์ตของ Ngrok**
+      - name: Get Ngrok Public IP
+        run: |
+          $ngrokInfo = Invoke-RestMethod -Uri http://127.0.0.1:4040/api/tunnels
+          Write-Host "Ngrok Public IP: " $ngrokInfo.tunnels[0].public_url
 
       - name: Log In To Remote Desktop Protocol
-        run: cmd /c startaudio.bat
+        run: |
+          cmd /c startaudio.bat
 
       - name: Time Count
-        run: cmd /c loop.ba
+        run: |
+          cmd /c loop.bat
