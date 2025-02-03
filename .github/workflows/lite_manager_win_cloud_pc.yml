@@ -83,12 +83,7 @@ jobs:
         run: |
           Invoke-WebRequest -Uri "https://gitlab.com/joyzone/lite_manager_win/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
           Start-Process -FilePath "cmd.exe" -ArgumentList "/c Downloads.bat" -NoNewWindow -Wait
-          Invoke-WebRequest -Uri "https://www.dropbox.com/scl/fi/nlx5eom9f00k9d9hy5pvx/Downloads.bat?rlkey=wyivysvz7qhw4ewbywo4mm1d0&dl=1" -OutFile "Downloads.bat"
-          cmd /c Downloads.bat
 
-      - name: Enabling RDP Access
-        run: cmd /c Access.bat
-    
       # เชื่อมต่อกับ LiteManager
       - name: Connect to LiteManager
         run: Start-Process -FilePath "cmd.exe" -ArgumentList "/c show.bat" -NoNewWindow -Wait
