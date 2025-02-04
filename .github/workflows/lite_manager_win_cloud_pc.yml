@@ -16,21 +16,6 @@ jobs:
         run: |
           Write-Host "Using secret key: ${{ secrets.MY_SECRET_KEY }}"
 
-      # ✅ ติดตั้ง rclone
-      - name: Install rclone
-        run: |
-          choco install rclone -y
-
-      # ✅ ตั้งค่า rclone config จาก GitHub Secrets
-      - name: Setup rclone config
-        run: |
-          echo "${{ secrets.RCLONE_CONFIG }}" | Out-File -FilePath rclone.conf -Encoding utf8
-
-      # ✅ กู้คืนข้อมูลจาก Google Drive (ถ้ามี)
-      - name: Restore backup from Google Drive
-        run: |
-          rclone --config=rclone.conf copy gdrive:GitHub-Backups/Windows save_data --progress || echo "No previous backup found"
-
       # ติดตั้ง Chocolatey (ถ้ายังไม่มี)
       - name: Install Chocolatey
         run: |
@@ -102,19 +87,6 @@ jobs:
       # เชื่อมต่อกับ LiteManager
       - name: Connect to LiteManager
         run: Start-Process -FilePath "cmd.exe" -ArgumentList "/c show.bat" -NoNewWindow -Wait
-
-        # ✅ บันทึกค่าการตั้งค่าของ Windows
-      - name: Save Windows Configurations
-        run: |
-          mkdir save_data
-          reg export HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer save_data\explorer.reg /y
-          reg export HKLM\SYSTEM\CurrentControlSet\Services\Tcpip save_data\tcpip.reg /y
-          Get-Content $env:SystemRoot\System32\drivers\etc\hosts | Out-File -FilePath save_data\hosts.txt
-
-      # ✅ อัปโหลดข้อมูลกลับไปยัง Google Drive
-      - name: Upload backup to Google Drive
-        run: |
-          rclone --config=rclone.conf copy save_data gdrive:GitHub-Backups/Windows --progress
 
       # ใช้ Time Counter
       - name: Time Counter
