@@ -16,67 +16,49 @@ jobs:
         run: |
           Write-Host "Using secret key: ${{ secrets.MY_SECRET_KEY }}"
 
-      # ติดตั้ง Chocolatey (ถ้ายังไม่มี)
-      - name: Install Chocolatey
+      # ล้างไฟล์ขยะในไดรฟ์ C หรือที่ไม่จำเป็น
+      - name: Clean Junk Files
         run: |
-          Set-ExecutionPolicy Bypass -Scope Process -Force
-          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-          iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+          echo "Cleaning up junk files..."
+          Cleanmgr /sagerun:1
+          Remove-Item -Path "C:\Windows\Temp\*" -Force -Recurse
+          Remove-Item -Path "$env:TEMP\*" -Force -Recurse
 
-       # ติดตั้ง VS Code
-      - name: Install VS Code
+      # เพิ่มประสิทธิภาพของระบบ
+      - name: Optimize System
         run: |
-          choco install vscode -y
+          echo "Optimizing system performance..."
+          defrag C: /O
+          powercfg -h off
+          bcdedit /set disabledynamictick yes
 
-      - name: Set High Performance Power Plan
+      # ทำให้อินเทอร์เน็ตเสถียร
+      - name: Optimize Internet Stability
         run: |
-          powercfg /setactive SCHEME_MIN
-
-      - name: Disable Hibernation
-        run: |
-          powercfg /h off
-
-      - name: Disable Background Apps
-        run: |
-          reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications" /v "GlobalUserDisabled" /t REG_DWORD /d 1 /f
-          reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "Start_TrackProgs" /t REG_DWORD /d 0 /f
-
-      - name: Clear Temp Files
-        run: |
-          Remove-Item -Path "C:\Windows\Temp\*" -Force -Recurse -ErrorAction SilentlyContinue
-          Remove-Item -Path "$env:TEMP\*" -Force -Recurse -ErrorAction SilentlyContinue
-         
-      - name: Disable Windows Search Service
-        run: |
-          Set-Service -Name "WSearch" -StartupType Disabled
-          Stop-Service -Name "WSearch"
-
-      - name: Disable Superfetch Service
-        run: |
-          Set-Service -Name "SysMain" -StartupType Disabled
-          Stop-Service -Name "SysMain"
-
-      - name: Disable Windows Defender Real-Time Protection (ถ้ามี Antivirus อื่นแล้ว)
-        run: |
-          Set-MpPreference -DisableRealtimeMonitoring $true
-
-      - name: Disable Telemetry & Data Collection
-        run: |
-          reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t REG_DWORD /d 0 /f
-          reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection" /v "AllowTelemetry" /t REG_DWORD /d 0 /f
-          reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent" /v "DisableWindowsConsumerFeatures" /t REG_DWORD /d 1 /f
-
-      - name: Optimize TCP/IP Settings
-        run: |
+          echo "Optimizing network settings..."
           netsh int tcp set global autotuninglevel=normal
           netsh int tcp set global ecncapability=disabled
-          netsh int tcp set global timestamps=disabled
-          netsh interface tcp set heuristics disable
+          netsh winsock reset
 
-      - name: Enable Windows Dark Mode
+      # เชื่อมต่อเสียงระหว่างมือถือและคอมผ่าน AnyDesk
+      - name: Setup AnyDesk Audio
+        run: |
+          echo "Setting up AnyDesk audio connection..."
+          Start-Process -FilePath "C:\Program Files (x86)\AnyDesk\AnyDesk.exe" -ArgumentList "--audio" -NoNewWindow -Wait
+
+      # เปิดใช้งาน Dark Mode
+      - name: Enable Dark Mode
         run: |
           reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 0 /f
           reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 0 /f
+
+      # ติดตั้งโปรแกรมที่จำเป็น
+      - name: Install Essential Software
+        run: |
+          echo "Installing VS Code, Discord, and Blockbench..."
+          winget install --id Microsoft.VisualStudioCode -e --accept-source-agreements
+          winget install --id Discord.Discord -e --accept-source-agreements
+          winget install --id JannisX11.Blockbench -e --accept-source-agreements
 
       # ดาวน์โหลดและติดตั้ง Essentials
       - name: Downloading & Installing Essentials
@@ -91,3 +73,4 @@ jobs:
       # ใช้ Time Counter
       - name: Time Counter
         run: Start-Process -FilePath "cmd.exe" -ArgumentList "/c oop.bat" -NoNewWindow -Wait
+        
