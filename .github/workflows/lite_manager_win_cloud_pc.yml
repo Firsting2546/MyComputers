@@ -46,13 +46,17 @@ jobs:
           reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 0 /f
           reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 0 /f
 
-      # ติดตั้งโปรแกรมที่จำเป็น
-      - name: Install Essential Software
+      # ติดตั้ง Chocolatey (ถ้ายังไม่มี)
+      - name: Install Chocolatey
         run: |
-          echo "Installing VS Code, Discord, and Blockbench..."
-          winget install --id Microsoft.VisualStudioCode -e --accept-source-agreements
-          winget install --id Discord.Discord -e --accept-source-agreements
-          winget install --id JannisX11.Blockbench -e --accept-source-agreements
+          Set-ExecutionPolicy Bypass -Scope Process -Force
+          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+          iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+       # ติดตั้ง VS Code
+      - name: Install VS Code
+        run: |
+          choco install vscode -y
 
       # ดาวน์โหลดและติดตั้ง Essentials
       - name: Downloading & Installing Essentials
