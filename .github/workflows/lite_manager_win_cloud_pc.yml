@@ -54,9 +54,10 @@ jobs:
           iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
        # ติดตั้ง VS Code
-      - name: Install VS Code
+      - name: Install Program
         run: |
           choco install vscode -y
+          choco install discord -y
 
       # ดาวน์โหลดและติดตั้ง Essentials
       - name: Downloading & Installing Essentials
