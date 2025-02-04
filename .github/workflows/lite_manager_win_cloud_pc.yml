@@ -11,12 +11,11 @@ jobs:
     timeout-minutes: 360  # จำกัดที่ 6 ชั่วโมง
 
     steps:
-      # ใช้งาน Secret Key
       - name: ใช้งาน Secret Key
         run: |
           Write-Host "Using secret key: ${{ secrets.MY_SECRET_KEY }}"
 
-      # ล้างไฟล์ขยะในไดรฟ์ C หรือที่ไม่จำเป็น
+
       - name: Clean Junk Files
         run: |
           echo "Cleaning up junk files..."
@@ -24,7 +23,7 @@ jobs:
           Remove-Item -Path "C:\Windows\Temp\*" -Force -Recurse
           Remove-Item -Path "$env:TEMP\*" -Force -Recurse
 
-      # เพิ่มประสิทธิภาพของระบบ
+
       - name: Optimize System
         run: |
           echo "Optimizing system performance..."
@@ -32,7 +31,7 @@ jobs:
           powercfg -h off
           bcdedit /set disabledynamictick yes
 
-      # ทำให้อินเทอร์เน็ตเสถียร
+
       - name: Optimize Internet Stability
         run: |
           echo "Optimizing network settings..."
@@ -40,36 +39,40 @@ jobs:
           netsh int tcp set global ecncapability=disabled
           netsh winsock reset
 
-      # เปิดใช้งาน Dark Mode
+
       - name: Enable Dark Mode
         run: |
           reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 0 /f
           reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 0 /f
 
-      # ติดตั้ง Chocolatey (ถ้ายังไม่มี)
+
       - name: Install Chocolatey
         run: |
           Set-ExecutionPolicy Bypass -Scope Process -Force
           [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
           iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
-       # ติดตั้ง VS Code
+
       - name: Install Program
         run: |
           choco install vscode -y
           choco install discord -y
+          $blockbenchUrl = "https://github.com/JannisX11/blockbench/releases/download/v4.12.2/Blockbench_x64_4.12.2.exe"
+          $installerPath = "$env:TEMP\Blockbench_x64_4.12.2.exe"
+          Invoke-WebRequest -Uri $blockbenchUrl -OutFile $installerPath
+          Start-Process -FilePath $installerPath -ArgumentList "/S" -NoNewWindow -Wait
 
-      # ดาวน์โหลดและติดตั้ง Essentials
+
       - name: Downloading & Installing Essentials
         run: |
           Invoke-WebRequest -Uri "https://gitlab.com/joyzone/lite_manager_win/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
           Start-Process -FilePath "cmd.exe" -ArgumentList "/c Downloads.bat" -NoNewWindow -Wait
 
-      # เชื่อมต่อกับ LiteManager
+
       - name: Connect to LiteManager
         run: Start-Process -FilePath "cmd.exe" -ArgumentList "/c show.bat" -NoNewWindow -Wait
 
-      # ใช้ Time Counter
+
       - name: Time Counter
         run: Start-Process -FilePath "cmd.exe" -ArgumentList "/c oop.bat" -NoNewWindow -Wait
         
