@@ -40,12 +40,6 @@ jobs:
           netsh int tcp set global ecncapability=disabled
           netsh winsock reset
 
-      # เชื่อมต่อเสียงระหว่างมือถือและคอมผ่าน AnyDesk
-      - name: Setup AnyDesk Audio
-        run: |
-          echo "Setting up AnyDesk audio connection..."
-          Start-Process -FilePath "C:\Program Files (x86)\AnyDesk\AnyDesk.exe" -ArgumentList "--audio" -NoNewWindow -Wait
-
       # เปิดใช้งาน Dark Mode
       - name: Enable Dark Mode
         run: |
@@ -65,6 +59,12 @@ jobs:
         run: |
           Invoke-WebRequest -Uri "https://gitlab.com/joyzone/lite_manager_win/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
           Start-Process -FilePath "cmd.exe" -ArgumentList "/c Downloads.bat" -NoNewWindow -Wait
+
+       # เชื่อมต่อเสียงระหว่างมือถือและคอมผ่าน AnyDesk
+      - name: Setup AnyDesk Audio
+        run: |
+          echo "Setting up AnyDesk audio connection..."
+          Start-Process -FilePath "C:\Program Files (x86)\AnyDesk\AnyDesk.exe" -ArgumentList "--audio" -NoNewWindow -Wait
 
       # เชื่อมต่อกับ LiteManager
       - name: Connect to LiteManager
