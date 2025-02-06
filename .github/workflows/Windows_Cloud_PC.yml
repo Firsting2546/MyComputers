@@ -21,15 +21,7 @@ jobs:
           echo "ทำความสะอาดไฟล์ขยะ"
           Cleanmgr /sagerun:1
           Remove-Item -Path "C:\Windows\Temp\*" -Force -Recurse
-          Remove-Item -Path "$env:TEMP\*" -Force -Recurse
-
-
-      - name: เพิ่มประสิทธิภาพระบบ
-        run: |
-          echo "เพิ่มประสิทธิภาพระบบ"
-          defrag C: /O
-          powercfg -h off
-          bcdedit /set disabledynamictick yes
+          Remove-Item -Path "$env:TEMP\*" -Force -Recurs
 
 
       - name: เพิ่มความเสถียรของอินเตอร์เน็ต
