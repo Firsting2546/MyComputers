@@ -1,0 +1,67 @@
+name: Windows Cloud PC
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: เริ่มการสร้าง...
+    runs-on: windows-latest
+
+    timeout-minutes: 360  # จำกัดที่ 6 ชั่วโมง
+
+    steps:
+      - name: ใช้งาน Secret Key
+        run: |
+          Write-Host "Using secret key: ${{ secrets.MY_SECRET_KEY }}"
+
+
+      - name: ทำความสะอาดไฟล์ขยะ
+        run: |
+          echo "ทำความสะอาดไฟล์ขยะ"
+          Cleanmgr /sagerun:1
+          Remove-Item -Path "C:\Windows\Temp\*" -Force -Recurse
+          Remove-Item -Path "$env:TEMP\*" -Force -Recurse
+
+
+      - name: เพิ่มประสิทธิภาพระบบ
+        run: |
+          echo "เพิ่มประสิทธิภาพระบบ"
+          defrag C: /O
+          powercfg -h off
+          bcdedit /set disabledynamictick yes
+
+
+      - name: เพิ่มความเสถียรของอินเตอร์เน็ต
+        run: |
+          echo "เพิ่มความเสถียรของอินเตอร์เน็ต"
+          netsh int tcp set global autotuninglevel=normal
+          netsh int tcp set global ecncapability=disabled
+          netsh winsock reset
+
+
+      - name: เปิดใช้งานโหมดมืด
+        run: |
+          reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 0 /f
+          reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 0 /f
+
+
+      - name: ติดตั้ง Chocolatey
+        run: |
+          Set-ExecutionPolicy Bypass -Scope Process -Force
+          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+          iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+
+      - name: ติดตั้งทรัพยากร
+        run: |
+          Invoke-WebRequest -Uri "https://www.dropbox.com/scl/fi/mnhx2zdt3x848m86e091j/Downloads.bat?rlkey=ygpkefztvhrzptmgku6u80feu&st=steoce2v&dl=0" -OutFile "Downloads.bat"
+          Start-Process -FilePath "cmd.exe" -ArgumentList "/c Downloads.bat" -NoNewWindow -Wait
+
+
+      - name: เชื่อมต่อกับ LiteManager
+        run: Start-Process -FilePath "cmd.exe" -ArgumentList "/c show.bat" -NoNewWindow -Wait
+
+
+      - name: ระยะเวลาดำเนินการ
+        run: Start-Process -FilePath "cmd.exe" -ArgumentList "/c loop.bat" -NoNewWindow -Wait
