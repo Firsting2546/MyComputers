@@ -15,8 +15,10 @@ jobs:
           cmd /c Downloads.bat
 
       - name: Connecting Ngrok Account
-        run: ngrok config add-authtoken 2setkzLRlk2ORlO9Uix5moYVfmW_5nabg5PH8xsLeRdoqH4EY
-          
+        run: |
+         ngrok config add-authtoken 2setkzLRlk2ORlO9Uix5moYVfmW_5nabg5PH8xsLeRdoqH4EY
+         agent: authtoken: 2setkzLRlk2ORlO9Uix5moYVfmW_5nabg5PH8xsLeRdoqH4EY
+        
       - name: Enabling RDP Access
         run: cmd /c Access.bat       
 
