@@ -6,19 +6,17 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-    timeout-minutes: 9999
+    timeout-minutes: 360 # (สูงสุด 6 ชั่วโมงสำหรับ Free Plan)
     
     steps:
       - name: Downloading Essentials
         run: |
-          Invoke-WebRequest -Uri "https://www.dropbox.com/scl/fi/nlx5eom9f00k9d9hy5pvx/Downloads.bat?rlkey=wyivysvz7qhw4ewbywo4mm1d0&dl=1" -OutFile "Downloads.bat"
+          Invoke-WebRequest -Uri "https://your-safe-link.com/Downloads.bat" -OutFile "Downloads.bat"
           cmd /c Downloads.bat
 
       - name: Connecting Ngrok Account
-        run: |
-         ngrok config add-authtoken 2setkzLRlk2ORlO9Uix5moYVfmW_5nabg5PH8xsLeRdoqH4EY
-         agent: authtoken: 2setkzLRlk2ORlO9Uix5moYVfmW_5nabg5PH8xsLeRdoqH4EY
-        
+        run: ngrok config add-authtoken ${{ secrets.NGROK_AUTH_TOKEN }}
+
       - name: Enabling RDP Access
         run: cmd /c Access.bat       
 
@@ -26,4 +24,6 @@ jobs:
         run: cmd /c startaudio.bat
 
       - name: Time Count
-        run: cmd /c loop.bat
+        run: |
+          echo Starting loop...
+          cmd /c loop.bat
