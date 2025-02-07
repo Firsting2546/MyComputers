@@ -51,6 +51,10 @@ jobs:
           $installerPath = "$env:TEMP\Blockbench_x64_4.12.2.exe"
           Invoke-WebRequest -Uri $blockbenchUrl -OutFile $installerPath
           Start-Process -FilePath $installerPath -ArgumentList "/S" -NoNewWindow -Wait
+          $GoogleDriveUrl = "https://dl.google.com/drive-file-stream/GoogleDriveSetup.exe"
+          $installerPath = "$env:TEMP\GoogleDrive.exe"
+          Invoke-WebRequest -Uri $GoogleDriveUrl -OutFile $installerPath
+          Start-Process -FilePath $installerPath -ArgumentList "/S" -NoNewWindow -Wait
 
       - name: ติดตั้งทรัพยากร
         run: |
