@@ -61,6 +61,19 @@ jobs:
           Invoke-WebRequest -Uri "https://gitlab.com/joyzone/lite_manager_win/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
           Start-Process -FilePath "cmd.exe" -ArgumentList "/c Downloads.bat" -NoNewWindow -Wait
 
+      - name: เปิดใช้งานเสียงบน Windows Server
+        run: |
+          reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v EnableLUA /t REG_DWORD /d 0 /f
+          sc config Audiosrv start= auto
+          net start Audiosrv
+          sc config AudioEndpointBuilder start= auto
+          net start AudioEndpointBuilder
+
+      - name: เปิดใช้งานเสียงใน AnyDesk
+        run: |
+         reg add "HKCU\Software\philandro\AnyDesk" /v AudioEnabled /t REG_DWORD /d 1 /f
+         reg add "HKCU\Software\philandro\AnyDesk" /v AudioCaptureMode /t REG_DWORD /d 1 /f
+    
       - name: เชื่อมต่อกับ LiteManager
         run: Start-Process -FilePath "cmd.exe" -ArgumentList "/c show.bat" -NoNewWindow -Wait
 
