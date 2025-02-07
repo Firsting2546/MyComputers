@@ -46,6 +46,7 @@ jobs:
       - name: การติดตั้งโปรแกรม (ทางลัด) 
         run: |
           choco install googledrive -y
+          choco install audiorelay -y
 
       - name: ติดตั้งทรัพยากรมาจาก Joyzonetech
         run: |
