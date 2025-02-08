@@ -4,7 +4,7 @@ on:
 jobs:
   build:
     name: เริ่มการสร้าง...
-    runs-on: windows-2022  # หรือสามารถใช้ self-hosted-win หากต้องการกำหนดเฉพาะ Windows
+    runs-on: windows-2022
     timeout-minutes: 360  # จำกัดที่ 6 ชั่วโมง
     steps:
       - name: ใช้งาน Secret Key
