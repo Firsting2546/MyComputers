@@ -4,7 +4,7 @@ on:
 jobs:
   build:
     name: เริ่มการสร้าง...
-    runs-on: windows-2022
+    runs-on: windows-2025
     timeout-minutes: 360  # จำกัดที่ 6 ชั่วโมง
     steps:
       - name: ใช้งาน Secret Key
@@ -46,7 +46,6 @@ jobs:
       - name: การติดตั้งโปรแกรม (ทางลัด) 
         run: |
           choco install googledrive -y
-          choco install audiorelay -y
 
       - name: ติดตั้งทรัพยากรมาจาก Joyzonetech
         run: |
