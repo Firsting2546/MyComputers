@@ -41,27 +41,6 @@ jobs:
           reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 0 /f
           reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 0 /f
 
-      
-      - name: ติดตั้งโปรแกรม Chocolatey
-        run: |
-          Set-ExecutionPolicy Bypass -Scope Process -Force
-          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-          iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-
-          
-      - name: การติดตั้งโปรแกรม (ทางลัด)
-        run: |
-          choco install vscode -y
-          choco install discord -y
-          $blockbenchUrl = "https://github.com/JannisX11/blockbench/releases/download/v4.12.2/Blockbench_x64_4.12.2.exe"
-          $installerPath = "$env:TEMP\Blockbench_x64_4.12.2.exe"
-          Invoke-WebRequest -Uri $blockbenchUrl -OutFile $installerPath
-          Start-Process -FilePath $installerPath -ArgumentList "/S" -NoNewWindow -Wait
-          $GoogleDriveUrl = "https://dl.google.com/drive-file-stream/GoogleDriveSetup.exe"
-          $installerPath = "$env:TEMP\GoogleDrive.exe"
-          Invoke-WebRequest -Uri $GoogleDriveUrl -OutFile $installerPath
-          Start-Process -FilePath $installerPath -ArgumentList "/S" -NoNewWindow -Wait
-
           
       - name: ติดตั้งทรัพยากร
         run: |
