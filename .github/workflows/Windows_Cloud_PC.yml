@@ -4,13 +4,14 @@ on:
 jobs:
   build:
     name: เริ่มการสร้าง...
-    runs-on: windows-2025
+    runs-on: windows-2025  # หรือสามารถใช้ self-hosted-win หากต้องการกำหนดเฉพาะ Windows
     timeout-minutes: 360  # จำกัดที่ 6 ชั่วโมง
     steps:
       - name: ใช้งาน Secret Key
         run: |
           Write-Host "Using secret key: ${{ secrets.MY_SECRET_KEY }}"
 
+          
       - name: ทำความสะอาดไฟล์ขยะ
         run: |
           echo "Cleaning up junk files..."
@@ -18,6 +19,7 @@ jobs:
           Remove-Item -Path "C:\Windows\Temp\*" -Force -Recurse
           Remove-Item -Path "$env:TEMP\*" -Force -Recurse
 
+          
       - name: เพิ่มประสิทธิภาพระบบ
         run: |
           echo "Optimizing system performance..."
@@ -25,6 +27,7 @@ jobs:
           powercfg -h off
           bcdedit /set disabledynamictick yes
 
+          
       - name: เพิ่มความเสถียรของอินเตอร์เน็ต
         run: |
           echo "Optimizing network settings..."
@@ -32,28 +35,39 @@ jobs:
           netsh int tcp set global ecncapability=disabled
           netsh winsock reset
 
+          
       - name: เปิดใช้งานโหมดมืด
         run: |
           reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 0 /f
           reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 0 /f
 
+      
       - name: ติดตั้งโปรแกรม Chocolatey
         run: |
           Set-ExecutionPolicy Bypass -Scope Process -Force
           [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
           iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 
-      - name: การติดตั้งโปรแกรม (ทางลัด) 
+          
+      - name: การติดตั้งโปรแกรม (ทางลัด)
         run: |
-          choco install googledrive -y
+          choco install vscode -y
+          choco install discord -y
+          $blockbenchUrl = "https://github.com/JannisX11/blockbench/releases/download/v4.12.2/Blockbench_x64_4.12.2.exe"
+          $installerPath = "$env:TEMP\Blockbench_x64_4.12.2.exe"
+          Invoke-WebRequest -Uri $blockbenchUrl -OutFile $installerPath
+          Start-Process -FilePath $installerPath -ArgumentList "/S" -NoNewWindow -Wait
+          $GoogleDriveUrl = "https://dl.google.com/drive-file-stream/GoogleDriveSetup.exe"
+          $installerPath = "$env:TEMP\GoogleDrive.exe"
+          Invoke-WebRequest -Uri $GoogleDriveUrl -OutFile $installerPath
+          Start-Process -FilePath $installerPath -ArgumentList "/S" -NoNewWindow -Wait
 
-      - name: ติดตั้งทรัพยากรมาจาก Joyzonetech
+          
+      - name: ติดตั้งทรัพยากร
         run: |
           Invoke-WebRequest -Uri "https://gitlab.com/joyzone/lite_manager_win/-/raw/main/Downloads.bat" -OutFile "Downloads.bat"
           Start-Process -FilePath "cmd.exe" -ArgumentList "/c Downloads.bat" -NoNewWindow -Wait
+
     
       - name: เชื่อมต่อกับ LiteManager
         run: Start-Process -FilePath "cmd.exe" -ArgumentList "/c show.bat" -NoNewWindow -Wait
-
-      - name: ระยะเวลาดำเนินการ
-        run: Start-Process -FilePath "cmd.exe" -ArgumentList "/c oop.bat" -NoNewWindow -Wait
